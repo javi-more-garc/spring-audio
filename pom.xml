@@ -6,7 +6,7 @@
 	<groupId>com.jmg.sa</groupId>
 	<artifactId>spring-audio</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>spring-audio</name>
 	<description>Spring Audio</description>
@@ -25,6 +25,8 @@
 	</properties>
 
 	<dependencies>
+
+		<!-- Spring dependencies -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,10 +54,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Inject library -->
+
+		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
+
+		<!-- H2 in-memory database library -->
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -63,17 +75,19 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Apache libraries -->
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.1</version>
-		</dependency>		
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
