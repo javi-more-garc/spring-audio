@@ -13,7 +13,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -32,11 +33,11 @@ public class UploadController {
 
     @Inject
     private AudioService audioService;
-    
+
     @RequestMapping(method = GET)
-    public String uploadHome(){
+    public String uploadHome() {
         return "upload";
-    }    
+    }
 
     @RequestMapping(method = POST)
     public ModelAndView handleFileUpload(@RequestPart("file") MultipartFile file) throws IOException {
@@ -46,23 +47,29 @@ public class UploadController {
         File tempFile = createTempFile(file);
 
         audioService.addNewFile(tempFile);
-        
+
         // prepare response
-        
+
         ModelAndView mv = new ModelAndView("upload");
-        mv.addObject("uploadSuccess", true);        
+        mv.addObject("uploadSuccess", true);
 
         return mv;
     }
 
     //
     // private methods
-    
-    private File createTempFile(MultipartFile file) throws IOException, FileNotFoundException {
-        // create tmp file
-        File tempFile = File.createTempFile("temp_file_name", ".tmp");
 
-        // copy into tmp  file the passed contentsO        
+    private File createTempFile(MultipartFile file) throws IOException, FileNotFoundException {
+
+        String originalFilename = file.getOriginalFilename();
+
+        String filename = FilenameUtils.getBaseName(originalFilename);
+        String extension = "." + FilenameUtils.getExtension(originalFilename);
+
+        // create tmp file
+        File tempFile = File.createTempFile(filename, extension);
+
+        // copy into tmp file the passed contentsO
         IOUtils.copyLarge(file.getInputStream(), new FileOutputStream(tempFile));
         return tempFile;
     }

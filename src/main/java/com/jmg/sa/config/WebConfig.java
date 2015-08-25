@@ -41,8 +41,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private ClientHttpRequestFactory clientHttpRequestFactory() {
 
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setReadTimeout(2000);
-        factory.setConnectTimeout(2000);
+        factory.setReadTimeout(10000);
+        factory.setConnectTimeout(10000);
         return factory;
     }
 

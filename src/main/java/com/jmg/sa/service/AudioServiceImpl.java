@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.jmg.sa.util.SecurityUtils;
-
 /**
  * @author Javier Moreno Garcia
  *
@@ -87,8 +85,8 @@ public class AudioServiceImpl implements AudioService {
         // transcriptType (mandatory)
         map.add("transcriptType", "machine");        
         
-        // externalID (optional)
-        map.add("externalID", SecurityUtils.getLoggedUserEmail());                       
+        // ownerID (optional)
+        //map.add("ownerID", SecurityUtils.getLoggedUserEmail());                       
 
         // file (mandatory)
         map.add("file", new FileSystemResource(file));
