@@ -13,7 +13,6 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.common.io.Files;
+import com.jmg.sa.bean.GenericResponse;
+import com.jmg.sa.bean.ListFolderResponse;
 import com.jmg.sa.service.AudioService;
 
 /**
@@ -28,30 +30,45 @@ import com.jmg.sa.service.AudioService;
  *
  */
 @Controller
-@RequestMapping("/upload")
-public class UploadController {
+@RequestMapping("/files")
+public class FileController {
 
     @Inject
     private AudioService audioService;
 
-    @RequestMapping(method = GET)
-    public String uploadHome() {
+    @RequestMapping(value = "/upload", method = GET)
+    public String home() {
         return "upload";
     }
 
-    @RequestMapping(method = POST)
-    public ModelAndView handleFileUpload(@RequestPart("file") MultipartFile file) throws IOException {
+    @RequestMapping(value = "/upload", method = POST)
+    public ModelAndView upload(@RequestPart("file") MultipartFile file) throws IOException {
 
         // TODO validate
 
         File tempFile = createTempFile(file);
 
-        audioService.addNewFile(tempFile);
+        // execute service
+        GenericResponse response = audioService.addNewFile(tempFile);
 
         // prepare response
 
         ModelAndView mv = new ModelAndView("upload");
-        mv.addObject("uploadSuccess", true);
+        mv.addObject("response", response);
+
+        return mv;
+    }
+
+    @RequestMapping(value = "/list", method = GET)
+    public ModelAndView list() {
+
+        // execute service
+        ListFolderResponse response = audioService.listFiles();
+
+        // prepare response
+
+        ModelAndView mv = new ModelAndView("list");
+        mv.addObject("response", response);
 
         return mv;
     }
@@ -63,11 +80,12 @@ public class UploadController {
 
         String originalFilename = file.getOriginalFilename();
 
-        String filename = FilenameUtils.getBaseName(originalFilename);
-        String extension = "." + FilenameUtils.getExtension(originalFilename);
+        // create tmp dir/ file
+        File tempDir = Files.createTempDir();
+        File tempFile = new File(tempDir, originalFilename);
 
-        // create tmp file
-        File tempFile = File.createTempFile(filename, extension);
+        tempDir.deleteOnExit();
+        tempFile.deleteOnExit();
 
         // copy into tmp file the passed contentsO
         IOUtils.copyLarge(file.getInputStream(), new FileOutputStream(tempFile));

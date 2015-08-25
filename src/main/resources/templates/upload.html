@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Upload page</title>
+<title>Upload file page</title>
 </head>
 
 <body>
-	<h1>Upload page</h1>
+	<h1>Upload file</h1>
 
-	<p th:if="${uploadSuccess}">File uploaded successfully</p>
+	<p th:if="${response != null and response.success}">File uploaded successfully</p>
+
+	<p th:if="${response != null and not response.success}">Error uploading file</p>
 
 	<form th:action="upload" enctype="multipart/form-data" method="POST">
 		Select file to upload:

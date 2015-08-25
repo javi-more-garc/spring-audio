@@ -1,7 +1,6 @@
 package com.jmg.sa.domain;
 
 import static javax.persistence.GenerationType.AUTO;
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.io.Serializable;
 
@@ -10,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -89,10 +86,4 @@ public class User extends AbstractEntity implements Serializable {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
-    }
-
 }

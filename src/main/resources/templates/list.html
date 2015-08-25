@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>List files page</title>
+</head>
+
+<body>
+	<h1>List files</h1>
+
+	<table border="1">
+		<thead>
+			<tr>
+				<th>Media id</th>
+				<th>Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="content : ${response.folderContents}">
+				<td th:text="${content.mediaId}"></td>
+				<td th:text="${content.name}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<br/>
+	
+	<a th:href="@{/}">Home</a>
+
+</body>
+</html>

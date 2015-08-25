@@ -3,6 +3,7 @@
  */
 package com.jmg.sa.service;
 
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 
 import java.io.File;
@@ -15,11 +16,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.jmg.sa.bean.GenericResponse;
+import com.jmg.sa.bean.ListFolderResponse;
 
 /**
  * @author Javier Moreno Garcia
@@ -41,34 +46,60 @@ public class AudioServiceImpl implements AudioService {
     @Value("${application.audio.service.password}")
     private String password;
 
+    @Value("${application.audio.service.folder}")
+    private String folder;
+
     @Inject
     private RestTemplate restTemplate;
 
     @Override
-    public void addNewFile(File file) {
+    public GenericResponse addNewFile(File file) {
 
         // create parameters
-        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-
-        addParameters(map, file);
+        MultiValueMap<String, Object> map = createParametersNewFile(file);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MULTIPART_FORM_DATA);
 
-        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 
         // perform request to audio service
 
-        ResponseEntity<String> response = restTemplate.exchange(AUDIO_SERVICE_URL, HttpMethod.POST, requestEntity,
-                String.class);
+        ResponseEntity<GenericResponse> response = restTemplate.exchange(AUDIO_SERVICE_URL, POST, requestEntity, GenericResponse.class);
+        
+        GenericResponse body = response.getBody();
 
-        logger.info("Received response status [{}] with body [{}]", response.getStatusCode(), response.getBody());
+        logger.info("Received response status [{}] with body [{}]", response.getStatusCode(), body);
+        
+        return body;
+    }
+
+    @Override
+    public ListFolderResponse listFiles() {
+
+        // create parameters
+        MultiValueMap<String, String> map = createParametersListFiles();
+        
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(AUDIO_SERVICE_URL).queryParams(map);
+                        
+        // perform request to audio service
+        ResponseEntity<ListFolderResponse> response = restTemplate.getForEntity(builder.toUriString(), ListFolderResponse.class);
+
+        ListFolderResponse body = response.getBody();
+
+        logger.info("Received response status [{}] with body [{}]", response.getStatusCode(), body);
+
+        return body;
 
     }
+
     //
     // private methods
 
-    private void addParameters(LinkedMultiValueMap<String, Object> map, File file) {
+    private MultiValueMap<String, Object> createParametersNewFile(File file) {
+
+        // create parameters
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 
         // version (mandatory)
         map.add("version", version);
@@ -78,19 +109,44 @@ public class AudioServiceImpl implements AudioService {
 
         // password (mandatory)
         map.add("password", password);
-
+        
         // action (mandatory)
         map.add("action", "uploadMedia");
-        
+
         // transcriptType (mandatory)
-        map.add("transcriptType", "machine");        
-        
-        // ownerID (optional)
-        //map.add("ownerID", SecurityUtils.getLoggedUserEmail());                       
+        map.add("transcriptType", "machine");
+
+        // folder (optional)
+        map.add("folderName", folder);
 
         // file (mandatory)
         map.add("file", new FileSystemResource(file));
 
+        return map;
+
     }
+
+    private MultiValueMap<String, String> createParametersListFiles() {
+
+        // create parameters
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+
+        // version (mandatory)
+        map.add("version", version);
+
+        // api key (mandatory)
+        map.add("apikey", apiKey);
+
+        // password (mandatory)
+        map.add("password", password);
+        // action (mandatory)
+        map.add("action", "listFolder");
+
+        // folder (mandatory)
+        map.add("folderName", folder);
+
+        return map;
+    }
+
 
 }
