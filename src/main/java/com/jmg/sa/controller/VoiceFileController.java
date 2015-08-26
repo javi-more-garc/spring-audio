@@ -6,14 +6,10 @@ package com.jmg.sa.controller;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -22,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.common.io.Files;
 import com.jmg.sa.domain.VoiceFile;
 import com.jmg.sa.service.VoiceFileService;
 
@@ -47,10 +42,8 @@ public class VoiceFileController {
 
         // TODO validate
 
-        File tempFile = createTempFile(file);
-
         // execute service
-        voiceFileService.addNewFile(tempFile);
+        voiceFileService.addNewFile(file);
 
         // prepare response
 
@@ -73,24 +66,4 @@ public class VoiceFileController {
 
         return mv;
     }
-
-    //
-    // private methods
-
-    private File createTempFile(MultipartFile file) throws IOException, FileNotFoundException {
-
-        String originalFilename = file.getOriginalFilename();
-
-        // create tmp dir/ file
-        File tempDir = Files.createTempDir();
-        File tempFile = new File(tempDir, originalFilename);
-
-        tempDir.deleteOnExit();
-        tempFile.deleteOnExit();
-
-        // copy into tmp file the passed contentsO
-        IOUtils.copyLarge(file.getInputStream(), new FileOutputStream(tempFile));
-        return tempFile;
-    }
-
 }

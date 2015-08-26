@@ -3,17 +3,15 @@
  */
 package com.jmg.sa.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jmg.sa.domain.User;
 import com.jmg.sa.domain.VoiceFile;
@@ -50,7 +48,6 @@ public class VoiceFileServiceImpl implements VoiceFileService {
         return result;
 
     }
-    
 
     @Override
     public VoiceFile findOne(Long id) {
@@ -66,14 +63,13 @@ public class VoiceFileServiceImpl implements VoiceFileService {
 
     @Override
     @Transactional(readOnly = false)
-    public void addNewFile(File file) throws IOException {
+    public void addNewFile(MultipartFile file) throws IOException {
 
         // get logged user
         User loggedUser = efSupport.checkLoggedUserExistAndReturn();
 
         // create new voice file content entity
-        VoiceFileContent voiceFileContent = new VoiceFileContent(IOUtils.toByteArray(new FileInputStream(file)),
-                loggedUser);
+        VoiceFileContent voiceFileContent = new VoiceFileContent(file.getBytes(), loggedUser);
 
         // create new voice file entity
         VoiceFile voiceFile = new VoiceFile(file.getName(), loggedUser);

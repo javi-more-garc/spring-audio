@@ -3,7 +3,9 @@
  */
 package com.jmg.sa.service;
 
-import java.io.File;
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jmg.sa.bean.GenericResponse;
 import com.jmg.sa.bean.ListFolderResponse;
@@ -14,8 +16,9 @@ import com.jmg.sa.bean.ListFolderResponse;
  */
 public interface AudioService {
 
-    GenericResponse addNewFileAsync(Long externalId, File file);
+    GenericResponse addNewFileAsync(Long externalId, MultipartFile file) throws IOException;
 
     ListFolderResponse listFiles();
+
 
 }
