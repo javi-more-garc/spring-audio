@@ -22,14 +22,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("home");
-        registry.addViewController("/login").setViewName("login");        
-        registry.addViewController("/list").setViewName("list");
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/files/listRest").setViewName("listRest");
 
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
     }
-    
-    
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate(clientHttpRequestFactory());

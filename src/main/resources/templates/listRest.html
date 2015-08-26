@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>List files page (REST)</title>
+
+<style type="text/css">
+[ng\:cloak], [ng-cloak], .ng-cloak {
+	display: none;
+}
+</style>
+
+</head>
+
+<body ng-app="app">
+
+	<h1>List files (REST)</h1>
+
+	<table border="1" ng-cloak="true">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Status</th>
+				<th>Media id</th>
+			</tr>
+		</thead>
+		<tbody ng-controller="voiceFileController" ng-init="getAll()">
+
+			<tr ng-repeat="file in voiceFiles">
+
+				<td>
+					<span ng-bind="file.id"></span>
+				</td>
+
+				<td>
+					<span ng-bind="file.filename"></span>
+				</td>
+
+				<td>
+					<span ng-bind="file.status"></span>
+				</td>
+
+				<td>
+					<span ng-bind="file.mediaId"></span>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<br />
+
+	<a th:href="@{/}">Home</a>
+
+	<script src="/js/dist/angular.js"></script>
+
+	<script src="/js/app.js"></script>
+	<script src="/js/factories.js"></script>
+	<script src="/js//voiceFileControllers.js"></script>
+</body>
+</html>

@@ -49,7 +49,7 @@ public class VoiceFile extends AbstractEntity implements Serializable {
     private VoiceFileStatus status = SENT;
     
     @Column(name = "media_id", nullable=true)
-    private Long mediaId;
+    private String mediaId;
     
     public VoiceFile(){
         
@@ -97,11 +97,11 @@ public class VoiceFile extends AbstractEntity implements Serializable {
         this.status = status;
     }
 
-    public Long getMediaId() {
+    public String getMediaId() {
         return this.mediaId;
     }
 
-    public void setMediaId(Long mediaId) {
+    public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
     }    
 
