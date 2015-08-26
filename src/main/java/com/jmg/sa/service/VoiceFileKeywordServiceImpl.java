@@ -3,6 +3,8 @@
  */
 package com.jmg.sa.service;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.data.domain.Page;
@@ -24,9 +26,22 @@ public class VoiceFileKeywordServiceImpl implements VoiceFileKeywordService{
 
     @Inject
     private VoiceFileKeywordRepository voiceFileKeywordRepository;
+    
+    @Override
+    public List<VoiceFileKeyword> listKeywords(Long voiceFileId) {
+
+        // get logged user's email
+        String loggedUserEmail = SecurityUtils.getLoggedUserEmail();
+
+        // find using repository
+        List<VoiceFileKeyword> result = voiceFileKeywordRepository.findByVoiceFile_idAndUser_email(voiceFileId, loggedUserEmail);
+
+        return result;
+
+    }
 
     @Override
-    public Page<VoiceFileKeyword> listFiles(Long voiceFileId, Pageable pageable) {
+    public Page<VoiceFileKeyword> listKeywords(Long voiceFileId, Pageable pageable) {
         
         // get logged user's email
         String loggedUserEmail = SecurityUtils.getLoggedUserEmail();

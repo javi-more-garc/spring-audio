@@ -4,6 +4,7 @@
 package com.jmg.sa.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,19 @@ public class VoiceFileServiceImpl implements VoiceFileService {
     @Inject
     private EntityFinderSupport efSupport;
 
+    @Override
+    public List<VoiceFile> listFiles() {
+
+        // get logged user's email
+        String loggedUserEmail = SecurityUtils.getLoggedUserEmail();
+
+        // find using repository
+        List<VoiceFile> result = voiceFileRepository.findByUser_email(loggedUserEmail);
+
+        return result;
+
+    }
+    
     @Override
     public Page<VoiceFile> listFiles(Pageable pageable) {
 

@@ -5,6 +5,8 @@ package com.jmg.sa.rest;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +29,13 @@ public class RestVoiceFileController {
     @Inject
     private VoiceFileService voiceFileService;
 
+    @RequestMapping(value = "/all", method = GET)
+    public List<VoiceFile> list() {
+
+        // execute service
+        return voiceFileService.listFiles();
+    }
+    
     @RequestMapping(method = GET)
     public Page<VoiceFile> list(Pageable pageable) {
 

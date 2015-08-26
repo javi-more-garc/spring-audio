@@ -4,6 +4,7 @@
 package com.jmg.sa.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +17,14 @@ import com.jmg.sa.domain.VoiceFile;
  *
  */
 public interface VoiceFileService {
+    
+    List<VoiceFile> listFiles();
 
     Page<VoiceFile> listFiles(Pageable pageable);
     
     VoiceFile findOne(Long id);
 
     void addNewFile(MultipartFile file) throws IOException;
+
 
 }

@@ -5,6 +5,8 @@ package com.jmg.sa.rest;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.data.domain.Page;
@@ -26,12 +28,19 @@ public class RestVoiceFileContentKeyword {
 
     @Inject
     private VoiceFileKeywordService voiceFileKeywordService;
+    
+    @RequestMapping(value = "/{voiceFileId}/keywords/all", method = GET)
+    public List<VoiceFileKeyword> list(@PathVariable Long voiceFileId) {
+
+        // execute service
+        return voiceFileKeywordService.listKeywords(voiceFileId);
+    }    
 
     @RequestMapping(value = "/{voiceFileId}/keywords", method = GET)
     public Page<VoiceFileKeyword> list(@PathVariable Long voiceFileId, Pageable pageable) {
         
      // execute service
-        return voiceFileKeywordService.listFiles(voiceFileId, pageable); 
+        return voiceFileKeywordService.listKeywords(voiceFileId, pageable); 
     }
 
 }
