@@ -72,7 +72,7 @@ public class VoiceFileServiceImpl implements VoiceFileService {
         VoiceFileContent voiceFileContent = new VoiceFileContent(file.getBytes(), loggedUser);
 
         // create new voice file entity
-        VoiceFile voiceFile = new VoiceFile(file.getName(), loggedUser);
+        VoiceFile voiceFile = new VoiceFile(file.getOriginalFilename(), loggedUser);
 
         // assign one-to-one relation
         voiceFile.setVoiceFileContent(voiceFileContent);
