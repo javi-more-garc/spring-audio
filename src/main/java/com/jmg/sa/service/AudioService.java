@@ -14,7 +14,7 @@ import com.jmg.sa.bean.ListFolderResponse;
  */
 public interface AudioService {
 
-    GenericResponse addNewFile(File file);
+    GenericResponse addNewFileAsync(Long externalId, File file);
 
     ListFolderResponse listFiles();
 

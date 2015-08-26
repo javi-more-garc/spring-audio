@@ -10,14 +10,18 @@
 	<table border="1">
 		<thead>
 			<tr>
-				<th>Media id</th>
+				<th>Id</th>
 				<th>Name</th>
+				<th>Status</th>
+				<th>Media id</th>								
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="content : ${response.folderContents}">
-				<td th:text="${content.mediaId}"></td>
-				<td th:text="${content.name}"></td>
+			<tr th:each="content : ${response.content}">
+				<td th:text="${content.id}"></td>
+				<td th:text="${content.filename}"></td>
+				<td th:text="${content.status}"></td>	
+				<td th:text="${content.mediaId}"></td>											
 			</tr>
 		</tbody>
 	</table>

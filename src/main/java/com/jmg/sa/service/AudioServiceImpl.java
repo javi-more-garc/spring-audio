@@ -17,6 +17,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -51,12 +52,13 @@ public class AudioServiceImpl implements AudioService {
 
     @Inject
     private RestTemplate restTemplate;
-
+   
     @Override
-    public GenericResponse addNewFile(File file) {
+    @Async
+    public GenericResponse addNewFileAsync(Long externalId, File file) {
 
         // create parameters
-        MultiValueMap<String, Object> map = createParametersNewFile(file);
+        MultiValueMap<String, Object> map = createParametersNewFile(externalId, file);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MULTIPART_FORM_DATA);
@@ -70,7 +72,7 @@ public class AudioServiceImpl implements AudioService {
         GenericResponse body = response.getBody();
 
         logger.info("Received response status [{}] with body [{}]", response.getStatusCode(), body);
-        
+             
         return body;
     }
 
@@ -96,7 +98,7 @@ public class AudioServiceImpl implements AudioService {
     //
     // private methods
 
-    private MultiValueMap<String, Object> createParametersNewFile(File file) {
+    private MultiValueMap<String, Object> createParametersNewFile(Long externalId, File file) {
 
         // create parameters
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
@@ -115,9 +117,14 @@ public class AudioServiceImpl implements AudioService {
 
         // transcriptType (mandatory)
         map.add("transcriptType", "machine");
+        
+        // external id (optional)
+        map.add("folderName", folder);        
 
         // folder (optional)
-        map.add("folderName", folder);
+        map.add("externalID", externalId);
+        
+        // TODO - Introduce callback so that we are called when the file is processed
 
         // file (mandatory)
         map.add("file", new FileSystemResource(file));

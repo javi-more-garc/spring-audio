@@ -7,9 +7,9 @@
 <body>
 	<h1>Upload file</h1>
 
-	<p th:if="${response != null and response.success}">File uploaded successfully</p>
+	<p th:if="${success != null and success}">File uploaded successfully</p>
 
-	<p th:if="${response != null and not response.success}">Error uploading file</p>
+	<p th:if="${success != null and not success}">Error uploading file</p>
 
 	<form th:action="upload" enctype="multipart/form-data" method="POST">
 		Select file to upload:

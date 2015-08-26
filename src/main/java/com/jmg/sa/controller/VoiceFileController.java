@@ -14,6 +14,8 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -21,9 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.common.io.Files;
-import com.jmg.sa.bean.GenericResponse;
-import com.jmg.sa.bean.ListFolderResponse;
-import com.jmg.sa.service.AudioService;
+import com.jmg.sa.domain.VoiceFile;
+import com.jmg.sa.service.VoiceFileService;
 
 /**
  * @author Javier Moreno Garcia
@@ -31,10 +32,10 @@ import com.jmg.sa.service.AudioService;
  */
 @Controller
 @RequestMapping("/files")
-public class FileController {
+public class VoiceFileController {
 
     @Inject
-    private AudioService audioService;
+    private VoiceFileService voiceFileService;
 
     @RequestMapping(value = "/upload", method = GET)
     public String home() {
@@ -49,21 +50,21 @@ public class FileController {
         File tempFile = createTempFile(file);
 
         // execute service
-        GenericResponse response = audioService.addNewFile(tempFile);
+        voiceFileService.addNewFile(tempFile);
 
         // prepare response
 
         ModelAndView mv = new ModelAndView("upload");
-        mv.addObject("response", response);
+        mv.addObject("success", true);
 
         return mv;
     }
 
     @RequestMapping(value = "/list", method = GET)
-    public ModelAndView list() {
+    public ModelAndView list(Pageable pageable) {
 
         // execute service
-        ListFolderResponse response = audioService.listFiles();
+        Page<VoiceFile> response = voiceFileService.listFiles(pageable);
 
         // prepare response
 
