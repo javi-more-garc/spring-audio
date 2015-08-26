@@ -11,6 +11,8 @@ import static javax.persistence.GenerationType.AUTO;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +20,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -42,10 +45,15 @@ public class VoiceFile extends AbstractEntity implements Serializable {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    
+
     @JsonIgnore
-    @OneToOne(mappedBy="voiceFile", cascade=ALL, fetch=LAZY, optional=false)
-    private VoiceFileContent voiceFileContent;    
+    @OneToOne(mappedBy = "voiceFile", cascade = ALL, fetch = LAZY, optional = false)
+    private VoiceFileContent content;
+
+    @JsonIgnore
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    @JoinColumn(name="voice_file_id")    
+    private List<VoiceFileKeyword> keywords = new ArrayList<VoiceFileKeyword>();
 
     @Column(name = "filename", nullable = false)
     private String filename;
@@ -84,14 +92,22 @@ public class VoiceFile extends AbstractEntity implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }   
-
-    public VoiceFileContent getVoiceFileContent() {
-        return this.voiceFileContent;
     }
 
-    public void setVoiceFileContent(VoiceFileContent voiceFileContent) {
-        this.voiceFileContent = voiceFileContent;
+    public VoiceFileContent getContent() {
+        return this.content;
+    }
+
+    public void setContent(VoiceFileContent content) {
+        this.content = content;
+    }
+
+    public List<VoiceFileKeyword> getKeywords() {
+        return this.keywords;
+    }
+
+    public void setKeywords(List<VoiceFileKeyword> keywords) {
+        this.keywords = keywords;
     }
 
     public String getFilename() {

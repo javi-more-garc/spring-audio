@@ -75,7 +75,7 @@ public class VoiceFileServiceImpl implements VoiceFileService {
         VoiceFile voiceFile = new VoiceFile(file.getOriginalFilename(), loggedUser);
 
         // assign one-to-one relation
-        voiceFile.setVoiceFileContent(voiceFileContent);
+        voiceFile.setContent(voiceFileContent);
         voiceFileContent.setVoiceFile(voiceFile);
 
         // save file
@@ -86,16 +86,6 @@ public class VoiceFileServiceImpl implements VoiceFileService {
 
         audioService.addNewFileAsync(voiceFile.getId(), file);
 
-    }
-
-    @Override
-    public VoiceFileContent getContent(Long id) {
-
-        // get voice file
-        VoiceFile voiceFile = efSupport.checkVoiceFileExistAndReturn(id);
-
-        // return its content
-        return voiceFile.getVoiceFileContent();
     }
 
 }

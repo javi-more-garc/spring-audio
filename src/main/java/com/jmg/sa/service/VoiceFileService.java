@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jmg.sa.domain.VoiceFile;
-import com.jmg.sa.domain.VoiceFileContent;
 
 /**
  * @author Javier Moreno Garcia
@@ -23,7 +22,5 @@ public interface VoiceFileService {
     VoiceFile findOne(Long id);
 
     void addNewFile(MultipartFile file) throws IOException;
-
-    VoiceFileContent getContent(Long id);
 
 }
