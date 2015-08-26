@@ -4,9 +4,12 @@
 package com.jmg.sa.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jmg.sa.domain.User;
 import com.jmg.sa.domain.VoiceFile;
+import com.jmg.sa.domain.VoiceFileContent;
 import com.jmg.sa.repository.VoiceFileRepository;
 import com.jmg.sa.util.SecurityUtils;
 
@@ -27,34 +31,12 @@ public class VoiceFileServiceImpl implements VoiceFileService {
 
     @Inject
     private AudioService audioService;
-    
+
     @Inject
     private VoiceFileRepository voiceFileRepository;
 
     @Inject
     private EntityFinderSupport efSupport;
-
-    // TODO - Introduce callback mapping that will be called by voicebase when a file is processed
-
-    @Override
-    @Transactional(readOnly = false)
-    public void addNewFile(File file) {
-
-        // get logged user
-        User loggedUser = efSupport.checkLoggedUserExistAndReturn();
-        
-        // create new entity
-        VoiceFile voiceFile = new VoiceFile(file.getName(), loggedUser);
-
-        // save file
-        voiceFileRepository.save(voiceFile);
-        
-        //
-        // call external API (async)
-        
-        audioService.addNewFileAsync(voiceFile.getId(), file);       
-
-    }
 
     @Override
     public Page<VoiceFile> listFiles(Pageable pageable) {
@@ -64,10 +46,60 @@ public class VoiceFileServiceImpl implements VoiceFileService {
 
         // find using repository
         Page<VoiceFile> result = voiceFileRepository.findByUser_email(loggedUserEmail, pageable);
-       
 
         return result;
 
+    }
+    
+
+    @Override
+    public VoiceFile findOne(Long id) {
+        // get voice file
+        VoiceFile voiceFile = efSupport.checkVoiceFileExistAndReturn(id);
+
+        // return it
+        return voiceFile;
+    }
+
+    // TODO - Introduce callback mapping that will be called by voicebase when a
+    // file is processed
+
+    @Override
+    @Transactional(readOnly = false)
+    public void addNewFile(File file) throws IOException {
+
+        // get logged user
+        User loggedUser = efSupport.checkLoggedUserExistAndReturn();
+
+        // create new voice file content entity
+        VoiceFileContent voiceFileContent = new VoiceFileContent(IOUtils.toByteArray(new FileInputStream(file)),
+                loggedUser);
+
+        // create new voice file entity
+        VoiceFile voiceFile = new VoiceFile(file.getName(), loggedUser);
+
+        // assign one-to-one relation
+        voiceFile.setVoiceFileContent(voiceFileContent);
+        voiceFileContent.setVoiceFile(voiceFile);
+
+        // save file
+        voiceFileRepository.save(voiceFile);
+
+        //
+        // call external API (async)
+
+        audioService.addNewFileAsync(voiceFile.getId(), file);
+
+    }
+
+    @Override
+    public VoiceFileContent getContent(Long id) {
+
+        // get voice file
+        VoiceFile voiceFile = efSupport.checkVoiceFileExistAndReturn(id);
+
+        // return its content
+        return voiceFile.getVoiceFileContent();
     }
 
 }

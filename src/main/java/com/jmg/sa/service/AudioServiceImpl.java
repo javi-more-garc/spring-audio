@@ -118,10 +118,10 @@ public class AudioServiceImpl implements AudioService {
         // transcriptType (mandatory)
         map.add("transcriptType", "machine");
         
-        // external id (optional)
+        // folder (optional)
         map.add("folderName", folder);        
 
-        // folder (optional)
+        // external id (optional)
         map.add("externalID", externalId);
         
         // TODO - Introduce callback so that we are called when the file is processed

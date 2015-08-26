@@ -4,7 +4,9 @@
 package com.jmg.sa.domain;
 
 import static com.jmg.sa.domain.VoiceFileStatus.SENT;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 import static org.springframework.util.Assert.notNull;
 
@@ -35,35 +37,38 @@ public class VoiceFile extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = AUTO)
     @Column(name = "id")
     private Long id;
-    
-    @JsonIgnore    
+
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;      
+    private User user;
     
-    @Column(name = "filename", nullable=false)
+    @JsonIgnore
+    @OneToOne(mappedBy="voiceFile", cascade=ALL, fetch=LAZY, optional=false)
+    private VoiceFileContent voiceFileContent;    
+
+    @Column(name = "filename", nullable = false)
     private String filename;
-    
-    @Column(name = "status", nullable=false)
+
+    @Column(name = "status", nullable = false)
     @Enumerated(STRING)
     private VoiceFileStatus status = SENT;
-    
-    @Column(name = "media_id", nullable=true)
+
+    @Column(name = "media_id", nullable = true)
     private String mediaId;
-    
-    public VoiceFile(){
-        
+
+    public VoiceFile() {
+
     }
-    
-    public VoiceFile(String filename, User user){
+
+    public VoiceFile(String filename, User user) {
         // validation
         notNull(filename);
-        notNull( user);
-        
+        notNull(user);
+
         this.filename = filename;
         this.user = user;
     }
-    
 
     public Long getId() {
         return this.id;
@@ -71,7 +76,7 @@ public class VoiceFile extends AbstractEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }    
+    }
 
     public User getUser() {
         return this.user;
@@ -79,6 +84,14 @@ public class VoiceFile extends AbstractEntity implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }   
+
+    public VoiceFileContent getVoiceFileContent() {
+        return this.voiceFileContent;
+    }
+
+    public void setVoiceFileContent(VoiceFileContent voiceFileContent) {
+        this.voiceFileContent = voiceFileContent;
     }
 
     public String getFilename() {
@@ -103,6 +116,5 @@ public class VoiceFile extends AbstractEntity implements Serializable {
 
     public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
-    }    
-
+    }
 }
