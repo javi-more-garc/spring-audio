@@ -3,17 +3,17 @@
  */
 package com.jmg.sa.rest;
 
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,26 +39,29 @@ public class RestVoiceFileController {
         // execute service
         return voiceFileService.listFiles(pageable);
     }
-    
+
     @RequestMapping(value = "/{id}", method = GET)
     public VoiceFile findOne(@PathVariable Long id) {
 
         // execute service
         return voiceFileService.findOne(id);
-    } 
+    }
 
     @RequestMapping(value = "/{id}/content", method = GET)
-    public void fileContent(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    public ResponseEntity<byte[]> fileContent(@PathVariable Long id, HttpServletResponse response) throws IOException {
 
         VoiceFileContent content = voiceFileService.getContent(id);
 
-        // copy it to response's OutputStream
-        IOUtils.copy(new ByteArrayInputStream(content.getBytes()), response.getOutputStream());
-        
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", "aaa.mp3"));
-        
-        // flush response
-        response.flushBuffer();
+        byte[] bytes = content.getBytes();
+
+        return ResponseEntity //
+                .ok() //
+                .contentLength(bytes.length) //
+                .contentType(APPLICATION_OCTET_STREAM) //
+                // needed for chrome so that the user can browse the media file
+                .header("Accept-Ranges", "bytes") //
+                .header("Content-Disposition", String.format("attachment; filename=voice_file_%d", id)) //
+                .body(bytes);
     }
 
 }
