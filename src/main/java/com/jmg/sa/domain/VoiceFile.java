@@ -3,7 +3,7 @@
  */
 package com.jmg.sa.domain;
 
-import static com.jmg.sa.domain.VoiceFileStatus.SENT;
+import static com.jmg.sa.domain.VoiceFileStatus.UPLOADED;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
@@ -52,15 +52,20 @@ public class VoiceFile extends AbstractEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    @JoinColumn(name="voice_file_id")    
-    private List<VoiceFileKeyword> keywords = new ArrayList<VoiceFileKeyword>();
+    @JoinColumn(name = "voice_file_analytics_id")
+    private List<VoiceFileKeywordAnalytics> analyticsKeywords = new ArrayList<VoiceFileKeywordAnalytics>();
+
+    @JsonIgnore
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    @JoinColumn(name = "voice_file_transcript_id")
+    private List<VoiceFileKeywordTrascript> transcriptKeywords = new ArrayList<VoiceFileKeywordTrascript>();
 
     @Column(name = "filename", nullable = false)
     private String filename;
 
     @Column(name = "status", nullable = false)
     @Enumerated(STRING)
-    private VoiceFileStatus status = SENT;
+    private VoiceFileStatus status = UPLOADED;
 
     @Column(name = "media_id", nullable = true)
     private String mediaId;
@@ -102,12 +107,20 @@ public class VoiceFile extends AbstractEntity implements Serializable {
         this.content = content;
     }
 
-    public List<VoiceFileKeyword> getKeywords() {
-        return this.keywords;
+    public List<VoiceFileKeywordAnalytics> getAnalyticsKeywords() {
+        return this.analyticsKeywords;
     }
 
-    public void setKeywords(List<VoiceFileKeyword> keywords) {
-        this.keywords = keywords;
+    public void setAnalyticsKeywords(List<VoiceFileKeywordAnalytics> analyticsKeywords) {
+        this.analyticsKeywords = analyticsKeywords;
+    }
+
+    public List<VoiceFileKeywordTrascript> getTranscriptKeywords() {
+        return this.transcriptKeywords;
+    }
+
+    public void setTranscriptKeywords(List<VoiceFileKeywordTrascript> transcriptKeywords) {
+        this.transcriptKeywords = transcriptKeywords;
     }
 
     public String getFilename() {

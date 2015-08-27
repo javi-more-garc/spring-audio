@@ -33,21 +33,21 @@ public class RestVoiceFileController {
     public List<VoiceFile> list() {
 
         // execute service
-        return voiceFileService.listFiles();
+        return voiceFileService.listFilesForLoggedUser();
     }
     
     @RequestMapping(method = GET)
     public Page<VoiceFile> list(Pageable pageable) {
 
         // execute service
-        return voiceFileService.listFiles(pageable);
+        return voiceFileService.listFilesForLoggedUser(pageable);
     }
 
     @RequestMapping(value = "/{id}", method = GET)
     public VoiceFile findOne(@PathVariable Long id) {
 
         // execute service
-        return voiceFileService.findOne(id);
+        return voiceFileService.findOneForLoggedUser(id);
     }
 
 }

@@ -43,7 +43,7 @@ public class VoiceFileController {
         // TODO validate
 
         // execute service
-        voiceFileService.addNewFile(file);
+        voiceFileService.addNewFileForLoggedUser(file);
 
         // prepare response
 
@@ -57,7 +57,7 @@ public class VoiceFileController {
     public ModelAndView list(Pageable pageable) {
 
         // execute service
-        Page<VoiceFile> response = voiceFileService.listFiles(pageable);
+        Page<VoiceFile> response = voiceFileService.listFilesForLoggedUser(pageable);
 
         // prepare response
 

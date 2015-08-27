@@ -3,6 +3,7 @@
  */
 package com.jmg.sa.domain;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 import static org.springframework.util.Assert.notNull;
@@ -52,18 +53,28 @@ public class VoiceFileContent extends AbstractEntity implements Serializable {
     @Column(name = "bytes", nullable = false)
     private byte[] bytes;
     
-    public VoiceFileContent(){
-        
+    @Lob
+    @Basic(fetch = EAGER)
+    @Column(name = "analytics", nullable = true)
+    private String analytics;
+    
+    @Lob
+    @Basic(fetch = EAGER)
+    @Column(name = "keywords", nullable = true)
+    private String keywords;
+
+    public VoiceFileContent() {
+
     }
 
-    public VoiceFileContent(byte[] bytes,  User user) {
+    public VoiceFileContent(byte[] bytes, User user) {
         // validation
         notNull(bytes);
         notNull(user);
 
         this.bytes = bytes;
         this.user = user;
-    }
+            }
 
     public Long getId() {
         return this.id;
@@ -97,4 +108,19 @@ public class VoiceFileContent extends AbstractEntity implements Serializable {
         this.bytes = bytes;
     }
 
+    public String getAnalytics() {
+        return this.analytics;
+    }
+
+    public void setAnalytics(String analytics) {
+        this.analytics = analytics;
+    }
+
+    public String getKeywords() {
+        return this.keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
 }

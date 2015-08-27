@@ -10,7 +10,8 @@ import com.jmg.sa.domain.VoiceFileContent;
  *
  */
 public interface VoiceFileContentService {
+    
+    VoiceFileContent getContent(Long voiceFileId);
 
-    VoiceFileContent getContent(Long id);
-
+    VoiceFileContent getContentForLoggedUser(Long voiceFileId);
 }

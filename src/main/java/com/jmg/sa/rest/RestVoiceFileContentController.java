@@ -34,7 +34,7 @@ public class RestVoiceFileContentController {
     public ResponseEntity<byte[]> fileContent(@PathVariable Long voiceFileId, HttpServletResponse response)
             throws IOException {
 
-        VoiceFileContent content = voiceFileContentService.getContent(voiceFileId);
+        VoiceFileContent content = voiceFileContentService.getContentForLoggedUser(voiceFileId);
 
         byte[] bytes = content.getBytes();
 

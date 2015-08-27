@@ -4,23 +4,21 @@
 package com.jmg.sa.domain;
 
 import static java.util.Arrays.asList;
-import static javax.persistence.GenerationType.AUTO;
 import static org.springframework.util.Assert.notNull;
 import static org.springframework.util.StringUtils.isEmpty;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,19 +26,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author Javier Moreno Garcia
  *
  */
-@Entity
-@Table(name = "voice_file_keyword")
-public class VoiceFileKeyword extends AbstractEntity implements Serializable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8448923231708595307L;
-
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    @Column(name = "id")
-    private Long id;
+@MappedSuperclass
+public class AbstractVoiceFileKeyword extends AbstractEntity {
 
     @JsonIgnore
     @OneToOne
@@ -55,30 +42,22 @@ public class VoiceFileKeyword extends AbstractEntity implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "unknowns", nullable = false)
-    private String unknowns;
+    @Column(name = "times", nullable = false)
+    private String times;
 
-    public VoiceFileKeyword() {
+    public AbstractVoiceFileKeyword() {
 
     }
 
-    public VoiceFileKeyword(String name, String unknowns, User user) {
+    public AbstractVoiceFileKeyword(String name, List<Double> timeValues, User user) {
         // validation
         notNull(name);
-        notNull(unknowns);
+        notNull(timeValues);
         notNull(user);
 
         this.name = name;
-        this.unknowns = unknowns;
+        setTimeValues(timeValues);
         this.user = user;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public User getUser() {
@@ -105,23 +84,23 @@ public class VoiceFileKeyword extends AbstractEntity implements Serializable {
         this.name = name;
     }
 
-    public String getUnknowns() {
-        return this.unknowns;
+    public String getTimes() {
+        return this.times;
     }
 
-    public void setUnknowns(String unknowns) {
-        this.unknowns = unknowns;
+    public void setUnknowns(String times) {
+        this.times = times;
     }
 
-    public List<Double> getUnknownValues() {
+    public List<Double> getTimeValues() {
 
-        if (isEmpty(this.unknowns)) {
+        if (isEmpty(this.times)) {
             return Collections.emptyList();
         }
 
         List<Double> result = new ArrayList<>();
 
-        String[] splitValues = this.unknowns.split(",");
+        String[] splitValues = this.times.split(",");
 
         asList(splitValues).forEach(value -> {
             result.add(Double.parseDouble(value.trim()));
@@ -129,6 +108,15 @@ public class VoiceFileKeyword extends AbstractEntity implements Serializable {
 
         return result;
 
+    }
+
+    public void setTimeValues(List<Double> timeValues) {
+
+        if (CollectionUtils.isEmpty(timeValues)) {
+            this.times = null;
+        }
+
+        this.times = StringUtils.join(timeValues, ",");
     }
 
 }
