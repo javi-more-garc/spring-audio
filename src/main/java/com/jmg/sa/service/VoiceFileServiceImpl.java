@@ -3,7 +3,7 @@
  */
 package com.jmg.sa.service;
 
-import static com.jmg.sa.domain.VoiceFileStatus.SENT_TO_VOICE_BASE;
+import static com.jmg.sa.domain.VoiceFileStatus.UPLOADED_TO_VOICE_BASE;
 import static com.jmg.sa.domain.VoiceFileStatus.SYNCHRONIZED;
 
 import java.io.IOException;
@@ -122,7 +122,7 @@ public class VoiceFileServiceImpl implements VoiceFileService {
         voiceFile.setMediaId(response.getMediaId());
 
         // update status
-        voiceFile.setStatus(SENT_TO_VOICE_BASE);
+        voiceFile.setStatus(UPLOADED_TO_VOICE_BASE);
 
         // save file
         voiceFileRepository.save(voiceFile);

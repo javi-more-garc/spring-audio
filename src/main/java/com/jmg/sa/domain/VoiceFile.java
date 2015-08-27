@@ -3,7 +3,7 @@
  */
 package com.jmg.sa.domain;
 
-import static com.jmg.sa.domain.VoiceFileStatus.UPLOADED;
+import static com.jmg.sa.domain.VoiceFileStatus.UPLOADED_TO_APPLICATION;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
@@ -65,7 +65,7 @@ public class VoiceFile extends AbstractEntity implements Serializable {
 
     @Column(name = "status", nullable = false)
     @Enumerated(STRING)
-    private VoiceFileStatus status = UPLOADED;
+    private VoiceFileStatus status = UPLOADED_TO_APPLICATION;
 
     @Column(name = "media_id", nullable = true)
     private String mediaId;

@@ -11,12 +11,13 @@ package com.jmg.sa.domain;
 public enum VoiceFileStatus {
 
     // just uploaded to our application
-    UPLOADED, //
-    // sent to voice base
-    SENT_TO_VOICE_BASE, //
-    // processing in voice base
-    PROCESSED_IN_VOICE_BASE, //    
-    // processed but file already exits in voice base    
+    UPLOADED_TO_APPLICATION, //
+    // uploaded to our application and to voice base (we have already media id)
+    UPLOADED_TO_VOICE_BASE, //
+    // processed in voice base
+    PROCESSED_IN_VOICE_BASE, //
+    // processed in voice base, with all details already in our application but
+    // file already exits in voice base
     SYNCHRONIZED, //
     // processed (file no longer in voice base)
     PROCESSED, //

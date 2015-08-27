@@ -22,7 +22,7 @@
 				<th>Name</th>
 				<th>Status</th>
 				<th>Media id</th>
-				<th></th>
+				<th>Operations</th>
 			</tr>
 		</thead>
 		<tbody ng-controller="voiceFileController" ng-init="getAll()">
@@ -46,7 +46,7 @@
 				</td>
 
 				<td>
-					<a href="/player?id={{file.id}}">Review</a>
+					<a ng-if="file.status =='PROCESSED'" href="/player?id={{file.id}}">Review</a>
 				</td>
 			</tr>
 

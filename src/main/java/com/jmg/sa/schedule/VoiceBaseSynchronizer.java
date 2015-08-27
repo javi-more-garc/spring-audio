@@ -5,9 +5,9 @@ package com.jmg.sa.schedule;
 
 import static com.jmg.sa.domain.VoiceFileStatus.PROCESSED;
 import static com.jmg.sa.domain.VoiceFileStatus.PROCESSED_IN_VOICE_BASE;
-import static com.jmg.sa.domain.VoiceFileStatus.SENT_TO_VOICE_BASE;
+import static com.jmg.sa.domain.VoiceFileStatus.UPLOADED_TO_VOICE_BASE;
 import static com.jmg.sa.domain.VoiceFileStatus.SYNCHRONIZED;
-import static com.jmg.sa.domain.VoiceFileStatus.UPLOADED;
+import static com.jmg.sa.domain.VoiceFileStatus.UPLOADED_TO_APPLICATION;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,7 +46,7 @@ public class VoiceBaseSynchronizer {
     public void sendUploadedFilesToVoiceBase() throws IOException {
 
         // get all files with status sent
-        List<VoiceFile> listFiles = voiceFileService.listFiles(UPLOADED);
+        List<VoiceFile> listFiles = voiceFileService.listFiles(UPLOADED_TO_APPLICATION);
 
         // iterate through them
         for (VoiceFile voiceFile : listFiles) {
@@ -60,7 +60,7 @@ public class VoiceBaseSynchronizer {
             FileUploadResponse response = voiceBaseService.addNewFile(content);
 
             if (response != null) {
-                // update media id and status (to SENT_TO_VOICE_BASE)
+                // update media id and status (to UPLODADED_TO_VOICE_BASE)
                 voiceFileService.update(id, response);
             }
 
@@ -72,7 +72,7 @@ public class VoiceBaseSynchronizer {
     public void retrieveFileStatusesFromVoiceBase() throws IOException {
 
         // get all files with status sent
-        List<VoiceFile> listFiles = voiceFileService.listFiles(SENT_TO_VOICE_BASE);
+        List<VoiceFile> listFiles = voiceFileService.listFiles(UPLOADED_TO_VOICE_BASE);
 
         // iterate through them
         for (VoiceFile voiceFile : listFiles) {
