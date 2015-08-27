@@ -111,11 +111,11 @@ public class AudioServiceImpl implements AudioService {
 
         String originalFilename = file.getOriginalFilename();
 
-        String suffix = FilenameUtils.getBaseName(originalFilename);
-        String prefix = FilenameUtils.getExtension(originalFilename);
-        
+        String prefix = FilenameUtils.getBaseName(originalFilename);
+        String suffix = FilenameUtils.getExtension(originalFilename);
+
         // create tmp file
-        File tempFile = File.createTempFile(prefix, suffix);
+        File tempFile = File.createTempFile(prefix, "." + suffix);
 
         // copy into tmp file the passed contentsO
         IOUtils.copyLarge(file.getInputStream(), new FileOutputStream(tempFile));
